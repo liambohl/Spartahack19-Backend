@@ -39,7 +39,7 @@ class Site{
         return self::$tablePrefix;
     }
 
-    public function getPdu()
+    public function getPdo()
     {
         return self::$pdo;
     }

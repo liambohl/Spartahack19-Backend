@@ -6,6 +6,8 @@
 
 namespace SpartahackV;
 
+require_once __DIR__ . '/Site.php';
+
 /**
  * Base class for all table classes
  */
