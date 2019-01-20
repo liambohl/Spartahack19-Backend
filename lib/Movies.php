@@ -28,7 +28,7 @@ class Movies extends Table
      * @param $number_of_movies integer Number of new movies to find
      * @return array Selected movies ordered from best to worst
      */
-    public function newMovies($user_id, $number_of_movies)
+    public function new_movies($user_id, $number_of_movies)
     {
         $pdo = $this->site->getPdo();
 

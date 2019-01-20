@@ -19,7 +19,7 @@ $movies = [];
 
 if ($user_id !== null and $number_of_movies !== null) {
     $table = new spartahackV\Movies($site);
-    $movies = $table->newMovies($user_id, $number_of_movies);
+    $movies = $table->new_movies($user_id, $number_of_movies);
 }
 
 if ($movies === []) {
