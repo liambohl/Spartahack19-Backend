@@ -46,8 +46,83 @@ SQL;
         $movies = [];
         foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $movie_array) {
             $movie = new Movie($movie_array);
+
+            // Get directors, writers, and actors
+            $people = new People($this->site);
+            $director_table = $this->smallTables["director"];
+            $writer_table = $this->smallTables["writer"];
+            $actor_table = $this->smallTables["actor"];
+
+            // director
+            $sql = <<<SQL
+SELECT person.name
+FROM $this->tableName AS movie
+INNER JOIN $director_table AS director
+	ON movie.id = movie_id
+INNER JOIN $people->tableName AS person
+	ON person.id = director_id
+WHERE movie.id=?
+SQL;
+            $statement = $pdo->prepare($sql);
+            $statement->execute(array($movie_array["id"]));
+            foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $director_array) {
+                $movie->add_director($director_array["name"]);
+            }
+
+            // writer
+            $sql = <<<SQL
+SELECT person.name
+FROM $this->tableName AS movie
+INNER JOIN $writer_table AS writer
+	ON movie.id = movie_id
+INNER JOIN $people->tableName AS person
+	ON person.id = writer_id
+WHERE movie.id=?
+SQL;
+            $statement = $pdo->prepare($sql);
+            $statement->execute(array($movie_array["id"]));
+            foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $writer_array) {
+                $movie->add_writer($writer_array["name"]);
+            }
+
+            // actor
+            $sql = <<<SQL
+SELECT person.name
+FROM $this->tableName AS movie
+INNER JOIN $actor_table AS actor
+	ON movie.id = movie_id
+INNER JOIN $people->tableName AS person
+	ON person.id = actor_id
+WHERE movie.id=?
+SQL;
+            $statement = $pdo->prepare($sql);
+            $statement->execute(array($movie_array["id"]));
+            foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $actor_array) {
+                $movie->add_actor($actor_array["name"]);
+            }
+
+            // Get genres
+            $genres = new Genres($this->site);
+            $genre_table = $this->smallTables["movie_genre"];
+
+            $sql = <<<SQL
+SELECT genre.name
+FROM $this->tableName AS movie
+INNER JOIN $genre_table AS movie_genre
+	ON movie.id = movie_id
+INNER JOIN $genres->tableName AS genre
+	ON genre.id = genre_id
+WHERE movie.id=?
+SQL;
+            $statement = $pdo->prepare($sql);
+            $statement->execute(array($movie_array["id"]));
+            foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $genre_array) {
+                $movie->add_genre($genre_array["name"]);
+            }
+
             $movies[] = $movie;
         }
+
         return $movies;
     }
 

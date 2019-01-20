@@ -49,16 +49,16 @@ class Movie
 
         // Directors, writers, actors, genres as child elements
         foreach ($this->directors as $director) {
-            $xml .= "<director name=$director->name></director>";
+            $xml .= "<director name=\"$director\"></director>";
         }
         foreach ($this->writers as $writer) {
-            $xml .= "<writer name=$writer->name></writer>";
+            $xml .= "<writer name=\"$writer\"></writer>";
         }
         foreach ($this->actors as $actor) {
-            $xml .= "<actor name=$actor->name></actor>";
+            $xml .= "<actor name=\"$actor\"></actor>";
         }
         foreach ($this->genres as $genre) {
-            $xml .= "<genre name=$genre->name></genre>";
+            $xml .= "<genre name=\"$genre\"></genre>";
         }
 
         // Close tag
