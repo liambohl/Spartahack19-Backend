@@ -9,6 +9,8 @@
 namespace spartahackV;
 
 require_once __DIR__ . '/Table.php';
+require_once __DIR__ . '/People.php';
+require_once __DIR__ . '/Genres.php';
 
 class Movies extends Table
 {
@@ -89,16 +91,46 @@ SQL;
 
         // Add movie
         $sql = <<<SQL
-INSERT INTO $this->tableName(name, poster_filename, trailer_url, release_year, budget, box_office, mpaa, duration, imdb, rotten_tomatoes)
+INSERT INTO $this->tableName(name, plot, poster_filename, trailer_url, release_year, box_office, mpaa, duration, imdb, rotten_tomatoes)
 VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 SQL;
         $statement = $pdo->prepare($sql);
-        $statement->execute(array($movie["name"], $movie["poster_filename"], $movie["trailer_url"],
-                $movie["release_year"], $movie["budget"], $movie["box_office"], $movie["mpaa"], $movie["duration"],
+        $statement->execute(array($movie["name"], $movie["plot"], $movie["poster_filename"], $movie["trailer_url"],
+                $movie["release_year"], $movie["box_office"], $movie["mpaa"], $movie["duration"],
                 $movie["imdb"], $movie["rotten_tomatoes"])
         );
         $movie_id = $pdo->lastInsertId();
 
-        // Add directors, writers, actors, genres, and their relationships to the movie
+        // Add directors, writers, actors, and their relationship to the movie
+        $people = new People($this->site);
+        $director_table = $this->smallTables["director"];
+        $writer_table = $this->smallTables["writer"];
+        $actor_table = $this->smallTables["actor"];
+
+        foreach ($movie["directors"] as $director_name) {
+            $director_id = $people->getPersonId($director_name);
+            $statement = $pdo->prepare("INSERT INTO $director_table(movie_id, director_id) VALUES(?, ?);");
+            $statement->execute(array($movie_id, $director_id));
+        }
+        foreach ($movie["writers"] as $writer_name) {
+            $writer_id = $people->getPersonId($writer_name);
+            $statement = $pdo->prepare("INSERT INTO $writer_table(movie_id, writer_id) VALUES(?, ?);");
+            $statement->execute(array($movie_id, $writer_id));
+        }
+        foreach ($movie["actors"] as $actor_name) {
+            $actor_id = $people->getPersonId($actor_name);
+            $statement = $pdo->prepare("INSERT INTO $actor_table(movie_id, actor_id) VALUES(?, ?);");
+            $statement->execute(array($movie_id, $actor_id));
+        }
+
+        // Add generes and their relationship to the movie
+        $genres = new Genres($this->site);
+        $genre_table = $this->smallTables["movie_genre"];
+
+        foreach ($movie["genres"] as $genre_name) {
+            $genre_id = $genres->getGenreId($genre_name);
+            $statement = $pdo->prepare("INSERT INTO $genre_table(movie_id, genre_id) VALUES(?, ?);");
+            $statement->execute(array($movie_id, $genre_id));
+        }
     }
 }
