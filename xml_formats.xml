@@ -1,0 +1,59 @@
+<!-- /user/new_user?username="liambohl"&first_name="Liam" -->
+<login success="true">
+	<user id="1" username="liambohl" first_name="Liam"></user>
+</login>
+<login success="false" error="Username taken"></login>
+
+<!-- /user/login?username="liambohl" -->
+<login success="true">
+	<user id="1" username="liambohl" first_name="Liam"></user>
+</login>
+<login success="false" error="Invalid login"></login>
+
+<!-- /movie/new_movies?user_id="1"&n="3" -->
+<movies success="true">
+	<movie id="" name="" poster_filename="" trailer_url="" release_year="" budget="" box_office="" mpaa="" duration="" imdb="" rotten_tomatoes="">
+		<director name=""></director>
+		<writer name=""></writer>
+		<actor name=""></actor>
+		<actor name=""></actor>
+		<genre name=""></genre>
+		<genre name=""></genre>
+	</movie>
+	<movie id="" name="" poster_filename="" trailer_url="" release_year="" budget="" box_office="" mpaa="" duration="" imdb="" rotten_tomatoes="">
+		<!-- ... -->
+	</movie>
+	<movie id="" name="" poster_filename="" trailer_url="" release_year="" budget="" box_office="" mpaa="" duration="" imdb="" rotten_tomatoes="">
+		<!-- ... -->
+	</movie>
+</movies>
+<movies success="false" error="Invalid user or can't find movies"></movies>
+
+<!-- /movie/reaction?user_id="1"&movie_id="217"&value="-1" -->
+
+<!-- /movie/favorites?user_id="1" -->
+<movies success="true">
+	<!-- ... -->
+</movies>
+<movies success="false" error="Invalid user"></movies>
+
+<!-- /movie/add_movies.php -->
+<!-- POST, raw, application/json -->
+[
+	{
+		"name": ,
+		"poster_filename": ,
+		"trailer_url": ,
+		"release_year": ,
+		"budget": ,
+		"box_office": ,
+		"mpaa": ,
+		"duration": ,
+		"imdb": ,
+		"rotten_tomatoes": ,
+		"directors": [""],
+		"writers": [""],
+		"actors": [""],
+		"genres": [""]
+	}
+]
