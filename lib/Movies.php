@@ -133,7 +133,18 @@ SQL;
      * @param $reaction integer User's rating of the movie on a scale of -1 to 2
      */
     public function react($user_id, $movie_id, $reaction) {
+        $pdo = $this->site->getPdo();
 
+        $reaction_table = $this->smallTables["reaction"];
+        $sql =<<<SQL
+INSERT INTO $reaction_table(user_id, movie_id, reaction)
+VALUES(?, ?, ?);
+SQL;
+        $statement = $pdo->prepare($sql);
+        $statement->bindParam(1, $user_id, \PDO::PARAM_STR);
+        $statement->bindParam(2, $movie_id, \PDO::PARAM_STR);
+        $statement->bindParam(3, $reaction, \PDO::PARAM_INT);
+        $statement->execute();
     }
 
     /**

@@ -29,7 +29,8 @@ class Table {
             "actor_preferences" => $site->getTablePrefix() . "actor_preferences",
             "genre" => $site->getTablePrefix() . "genre",
             "movie_genre" => $site->getTablePrefix() . "movie_genre",
-            "genre_preferences" => $site->getTablePrefix() . "genre_preferences"
+            "genre_preferences" => $site->getTablePrefix() . "genre_preferences",
+            "reaction" => $site->getTablePrefix() . "reaction"
         );
     }
 
