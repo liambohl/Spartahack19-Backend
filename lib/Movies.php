@@ -33,13 +33,18 @@ class Movies extends Table
         $pdo = $this->site->getPdo();
 
         // Get movie info
+        $reaction_table = $this->smallTables["reaction"];
         $sql =<<<SQL
-SELECT * from $this->tableName
+SELECT movie.* from $this->tableName AS movie
+INNER JOIN $reaction_table AS reaction
+  ON movie.id != movie_id
+WHERE user_id = ?
 ORDER BY rotten_tomatoes DESC
 LIMIT ?;
 SQL;
         $statement = $pdo->prepare($sql);
-        $statement->bindParam(1, $number_of_movies, \PDO::PARAM_INT);
+        $statement->bindParam(1, $user_id, \PDO::PARAM_STR);
+        $statement->bindParam(2, $number_of_movies, \PDO::PARAM_INT);
         $statement->execute();
 
         // Create and return movies
