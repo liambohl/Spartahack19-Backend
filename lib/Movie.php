@@ -17,7 +17,7 @@ class Movie
     public function __construct($movie_array) {
         $this->id = $movie_array["id"];
         $this->name = $movie_array["name"];
-        $this->plot = $movie_array["plot"];
+        $this->plot = addslashes($movie_array["plot"]);
         $this->poster_filename = $movie_array["poster_filename"];
         $this->trailer_url = $movie_array["trailer_url"];
         $this->release_year = $movie_array["release_year"];
