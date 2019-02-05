@@ -17,7 +17,7 @@ class Movie
     public function __construct($movie_array) {
         $this->id = $movie_array["id"];
         $this->name = $movie_array["name"];
-        $this->plot = str_replace("\"","&quot;", $movie_array["plot"]);
+        $this->plot = $movie_array["plot"];
         $this->poster_filename = $movie_array["poster_filename"];
         $this->trailer_url = $movie_array["trailer_url"];
         $this->release_year = $movie_array["release_year"];
@@ -37,13 +37,33 @@ class Movie
     }
 
     /**
+     * Escapes XML special chracters (& < > " and ')
+     * @param $str string in which to escape special characters
+     * @return string XML representation with escaped special characters
+     */
+    private function escape_xml($str){
+        $str = str_replace("&","&amp;", $str);
+        $str = str_replace("\"","&&quot;", $str);
+        $str = str_replace(">","&gt;", $str);
+        $str = str_replace("<","&gt;", $str);
+        return str_replace("'","&apos;", $str);
+    }
+
+    /**
      * Represent the movie as XML.
      * @return string XML representation
      */
     public function as_xml() {
+
+        // Prepares movie attributes for xml by escaping characters (& < > " and ')
+        $xml_name = $this->escape_xml($this->name);
+        $xml_plot = $this->escape_xml($this->plot);
+        $xml_poster_filename = $this->escape_xml($this->poster_filename);
+        $xml_trailer_url = $this->escape_xml($this->trailer_url);
+
         // Open tag with attributes
-        $xml = "<movie id=\"$this->id\" name=\"$this->name\" plot=\"$this->plot\" poster_filename=\"$this->poster_filename\" " .
-            "trailer_url=\"$this->trailer_url\" release_year=\"$this->release_year\" " .
+        $xml = "<movie id=\"$this->id\" name=\"$xml_name\" plot=\"$xml_plot\" poster_filename=\"$xml_poster_filename\" " .
+            "trailer_url=\"$xml_trailer_url\" release_year=\"$this->release_year\" " .
             "box_office=\"$this->box_office\" mpaa=\"$this->mpaa\" duration=\"$this->duration\" imdb=\"$this->imdb\" " .
             "rotten_tomatoes=\"$this->rotten_tomatoes\">";
 
